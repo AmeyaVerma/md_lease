@@ -10,14 +10,5 @@ export const supabase = createClient(
 
 export const MEDIA_BUCKET = "listing-media";
 
-/** Published lease listings, newest first. */
-export async function getLeaseListings() {
-  const { data, error } = await supabase
-    .from("listings")
-    .select("id, data, created_at")
-    .eq("published", true)
-    .eq("txn", "lease")
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return data;
-}
+export const publicMediaUrl = (path: string) =>
+  supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;

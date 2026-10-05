@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MD Group — lease site
 
-## Getting Started
-
-First, run the development server:
+Marketing and lease-showing site for MD Group, modelled on the Cushman & Wakefield
+"Properties for Lease" experience. Next.js 16 (App Router) + Tailwind 4.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Route | What it is |
+|---|---|
+| `/` | Hero search, latest listings, browse by type and locality, why MD, partners |
+| `/properties/lease` | Search: keyword, type, size, All Filters dialog, map toggle, sort, pagination. All state is in the URL |
+| `/properties/lease/[slug]` | Listing: gallery + video, overview, key features, details, lease terms, location map, contact panel, similar properties |
+| `/contact`, `/about` | Enquiry form and company page |
+| `/sitemap.xml`, `/robots.txt` | Generated from live listings |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Data — shared with md-commercial
 
-## Learn More
+Listings come from the **same Supabase project** as `md-commercial`
+(`src/lib/supabase.ts`, keys in `.env.local`). This site only **reads**:
+published rows where `txn = 'lease'`, plus their photos from `listing_media`.
+MD's team adds and edits listings in md-commercial's admin panel; pages pick up
+changes within 60 seconds.
 
-To learn more about Next.js, take a look at the following resources:
+Until the database has lease rows, the six lease listings from md-commercial's
+`data.js` are bundled in `src/lib/seed.ts`. A database row with the same id
+(e.g. `MD-0004`) replaces its seed record.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Brand, contacts and taxonomy live in `src/lib/site.ts`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Enquiries
 
-## Deploy on Vercel
+Set `NEXT_PUBLIC_WEB3FORMS_KEY` (free key from web3forms.com for
+mdgroup108@gmail.com) and enquiries arrive in the inbox directly. Without it the
+form opens the visitor's email app pre-filled. WhatsApp buttons work either way.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Before launch
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Replace stock photos in `public/img/` with the developers' own images and clear
+  `site.photoCredit`. Several stock shots show other brands' shopfronts.
+- Lease terms, unit numbers and parking in `seed.ts` are sample values.
+- Confirm the homepage copy ("Why MD Group") and stats in `site.ts` with MD.
+- Set `NEXT_PUBLIC_SITE_URL` to the production domain (used for canonical URLs and the sitemap).
+- Map pins use locality centres; add `lat`/`lng` to a listing for an exact pin.
