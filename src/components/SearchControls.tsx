@@ -13,19 +13,13 @@ type Counts = {
   size: { label: string; min: number; max: number | null; count: number }[];
 };
 
-/* Keyword bar, three quick dropdowns, the All Filters dialog, the map
-   toggle and sort. Every control writes to the URL, so a filtered view
-   can be shared or bookmarked and the server renders the results. */
-export function SearchControls({ counts, total }: { counts: Counts; total: number }) {
+/* Every control writes to the URL, so a filtered view can be shared or
+   bookmarked and the server renders the results. */
+function useUrlPush() {
   const router = useRouter();
   const path = usePathname();
   const sp = useSearchParams();
   const [pending, start] = useTransition();
-  const [q, setQ] = useState(sp.get("q") ?? "");
-  const [dialog, setDialog] = useState(false);
-
-  const types = sp.get("type")?.split(",").filter(Boolean) ?? [];
-  const mapOn = sp.get("view") === "map";
 
   function push(patch: Record<string, string | null>) {
     const next = new URLSearchParams(sp.toString());
@@ -33,9 +27,21 @@ export function SearchControls({ counts, total }: { counts: Counts; total: numbe
       if (v === null || v === "") next.delete(k);
       else next.set(k, v);
     }
-    if (!("page" in patch)) next.delete("page");
-    start(() => router.push(`${path}?${next.toString()}`, { scroll: false }));
+    const qs = next.toString();
+    start(() => router.push(qs ? `${path}?${qs}` : path, { scroll: false }));
   }
+  return { sp, push, pending };
+}
+
+/* Keyword bar, three quick dropdowns, the All Filters dialog and the
+   map toggle. The map is on by default, as on C&W. */
+export function SearchControls({ counts }: { counts: Counts }) {
+  const { sp, push, pending } = useUrlPush();
+  const [q, setQ] = useState(sp.get("q") ?? "");
+  const [dialog, setDialog] = useState(false);
+
+  const types = sp.get("type")?.split(",").filter(Boolean) ?? [];
+  const mapOn = sp.get("view") !== "list";
 
   const sizeValue = `${sp.get("min") ?? ""}-${sp.get("max") ?? ""}`;
 
@@ -69,7 +75,7 @@ export function SearchControls({ counts, total }: { counts: Counts; total: numbe
           <button onClick={() => setDialog(true)} className="btn btn-outline h-12 !border-line !text-ink-2 hover:!bg-ground">
             <FilterIcon /> All filters
           </button>
-          <button onClick={() => push({ view: mapOn ? null : "map" })}
+          <button onClick={() => push({ view: mapOn ? "list" : null })}
             className="btn btn-primary h-12" aria-pressed={mapOn}>
             <MapIcon /> {mapOn ? "Hide map" : "Show map"}
           </button>
@@ -78,23 +84,25 @@ export function SearchControls({ counts, total }: { counts: Counts; total: numbe
 
       <ActiveChips sp={sp} push={push} />
 
-      <div className="mt-5 flex items-center justify-between gap-4 text-sm">
-        <p className="text-ink-2" aria-live="polite">{total} {total === 1 ? "property" : "properties"} for lease</p>
-        <label className="flex items-center gap-2">
-          <span className="text-muted">Sort</span>
-          <select value={sp.get("sort") ?? "updated"} onChange={(e) => push({ sort: e.target.value })}
-            className="border-b border-navy bg-transparent py-1 pr-1 font-semibold text-navy outline-none">
-            <option value="updated">Recently updated</option>
-            <option value="size-asc">Available space: low to high</option>
-            <option value="size-desc">Available space: high to low</option>
-            <option value="rent-asc">Rent: low to high</option>
-            <option value="name">Property A–Z</option>
-          </select>
-        </label>
-      </div>
-
       {dialog && <FilterDialog counts={counts} onClose={() => setDialog(false)} onApply={(p) => { push(p); setDialog(false); }} />}
     </div>
+  );
+}
+
+export function SortSelect() {
+  const { sp, push } = useUrlPush();
+  return (
+    <label className="flex items-center gap-2">
+      <span className="text-muted">Sort</span>
+      <select value={sp.get("sort") ?? "updated"} onChange={(e) => push({ sort: e.target.value })}
+        className="border-b border-navy bg-transparent py-1 pr-1 font-semibold text-navy outline-none">
+        <option value="updated">Recently updated</option>
+        <option value="size-asc">Available space: low to high</option>
+        <option value="size-desc">Available space: high to low</option>
+        <option value="rent-asc">Rent: low to high</option>
+        <option value="name">Property A–Z</option>
+      </select>
+    </label>
   );
 }
 

@@ -13,7 +13,7 @@ npm run dev      # http://localhost:3000
 | Route | What it is |
 |---|---|
 | `/` | Hero search, latest listings, browse by type and locality, why MD, partners |
-| `/properties/lease` | Search: keyword, type, size, All Filters dialog, map toggle, sort, pagination. All state is in the URL |
+| `/properties/lease` | C&W split view: filter bar on top, map on the left, results on the right (hover syncs card and pin; "Update results when map moves"). Hide Map switches to a two-column grid. Filters live in the URL |
 | `/properties/lease/[slug]` | Listing: gallery + video, overview, key features, details, lease terms, location map, contact panel, similar properties |
 | `/contact`, `/about` | Enquiry form and company page |
 | `/sitemap.xml`, `/robots.txt` | Generated from live listings |
@@ -31,6 +31,13 @@ Until the database has lease rows, the six lease listings from md-commercial's
 (e.g. `MD-0004`) replaces its seed record.
 
 Brand, contacts and taxonomy live in `src/lib/site.ts`.
+
+## Map
+
+Set `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (Google Cloud → Maps JavaScript API) to use
+Google Maps, as C&W does. Optionally set `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` for a
+styled map. Without a key the map falls back to OpenStreetMap — same pins,
+popups and behaviour.
 
 ## Enquiries
 
