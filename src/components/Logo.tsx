@@ -5,7 +5,7 @@ import Link from "next/link";
 export function Logo({ light = false }: { light?: boolean }) {
   const ink = light ? "text-white" : "text-navy";
   return (
-    <Link href="/" className={`flex items-center gap-2.5 ${ink}`} aria-label="MD Group home">
+    <Link href="/properties/lease" className={`flex items-center gap-2.5 ${ink}`} aria-label="MD Group home">
       <svg width="30" height="26" viewBox="0 0 30 26" aria-hidden="true">
         <rect x="0" y="12" width="5" height="14" className="fill-copper" />
         <rect x="8" y="6" width="5" height="20" className="fill-copper" />

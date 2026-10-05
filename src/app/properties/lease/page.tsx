@@ -44,7 +44,6 @@ export default async function LeaseSearchPage({ searchParams }: { searchParams: 
     <>
       <div className={`mx-auto px-4 pb-16 pt-6 sm:px-6 ${mapOn ? "max-w-[1600px]" : "max-w-7xl"}`}>
         <nav aria-label="Breadcrumb" className="text-xs text-muted">
-          <Link href="/" className="hover:text-navy">Home</Link> <span className="mx-1.5">|</span>
           <span>Properties</span> <span className="mx-1.5">|</span>
           <span className="text-ink">For lease</span>
         </nav>

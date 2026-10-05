@@ -12,7 +12,7 @@ npm run dev      # http://localhost:3000
 
 | Route | What it is |
 |---|---|
-| `/` | Hero search, latest listings, browse by type and locality, why MD, partners |
+| `/` | Redirects to `/properties/lease` — the site opens on the search (no landing page) |
 | `/properties/lease` | C&W split view: filter bar on top, map on the left, results on the right (hover syncs card and pin; "Update results when map moves"). Hide Map switches to a two-column grid. Filters live in the URL |
 | `/properties/lease/[slug]` | Listing: gallery + video, overview, key features, details, lease terms, location map, contact panel, similar properties |
 | `/contact`, `/about` | Enquiry form and company page |

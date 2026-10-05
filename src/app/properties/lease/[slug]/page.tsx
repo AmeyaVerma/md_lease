@@ -68,7 +68,6 @@ export default async function ListingPage({ params }: { params: Params }) {
 
       <div className="mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6">
         <nav aria-label="Breadcrumb" className="truncate text-xs text-muted">
-          <Link href="/" className="hover:text-navy">Home</Link> <span className="mx-1.5">|</span>
           <Link href="/properties/lease" className="hover:text-navy">Properties for lease</Link> <span className="mx-1.5">|</span>
           <span className="text-ink">{title}</span>
         </nav>

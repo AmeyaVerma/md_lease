@@ -7,7 +7,6 @@ import { Logo } from "./Logo";
 
 const NAV = [
   { href: "/properties/lease", label: "Properties for Lease" },
-  { href: "/#localities", label: "Localities" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
 ];
@@ -28,9 +27,6 @@ export function Header() {
               {n.label}
             </Link>
           ))}
-          <Link href="/properties/lease" className="ml-2 grid h-9 w-9 place-items-center text-ink-2 hover:text-copper" aria-label="Search properties">
-            <SearchIcon />
-          </Link>
           <Link href="/contact" className="btn btn-primary !py-2.5">Enquire</Link>
         </nav>
 
